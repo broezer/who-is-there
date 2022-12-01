@@ -1,0 +1,138 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:title" content="">
+  <meta property="og:type" content="">
+  <meta property="og:url" content="">
+  <meta property="og:image" content="">
+
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/style.css">
+
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#fafafa">
+</head>
+
+<body>
+    <header>
+        <h1>Teachable Machine Image Model - Example</h1>
+    </header>
+
+    <main>
+        
+       
+    
+        <section>
+            <button type="button" class="btn-start" onclick="init()">Start</button>
+        </section>
+        
+    
+        <section class="">
+            <h2 class="who">Who is there??</h2>
+            <div class="webcam-wrapper">
+                <div id="webcam-container"></div>
+            </div>
+            <h2 class="name"><span id="name-tag"></span>&nbsp;</h2>
+        </section>
+        
+    
+        
+       
+
+    </main>
+
+    <footer class="lottie">
+        <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+        <lottie-player src="https://lottie.host/042e20f7-862b-4e4d-9656-4bfc51b583a5/dPOUjcQUnt.json"  background="transparent"  speed="0.4"  style="width: 100%; height: 100%;"  loop  autoplay></lottie-player>
+    </footer>
+    
+    <div id="label-container"></div>
+    
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+    <script type="text/javascript">
+        // More API functions here:
+        // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/image
+    
+        // the link to your model provided by Teachable Machine export panel
+        const URL = "./my_model/";
+    
+        let model, webcam, labelContainer, maxPredictions;
+        
+        // Load the image model and setup the webcam
+        async function init() {
+            const modelURL = URL + "model.json";
+            const metadataURL = URL + "metadata.json";
+            const devices = await navigator.mediaDevices.enumerateDevices();
+    
+            // load the model and metadata
+            // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
+            // or files from your local hard drive
+            // Note: the pose library adds "tmImage" object to your window (window.tmImage)
+            model = await tmImage.load(modelURL, metadataURL);
+            maxPredictions = model.getTotalClasses();
+    
+            // Convenience function to setup a webcam
+            const flip = true; // whether to flip the webcam
+            webcam = new tmImage.Webcam(600, 600, false); // width, height, flip
+            await webcam.setup({ deviceId: devices[2].deviceId }); // request access to the webcam
+            await webcam.play();
+            window.requestAnimationFrame(loop);
+    
+            // append elements to the DOM
+            document.getElementById("webcam-container").appendChild(webcam.canvas);
+            labelContainer = document.getElementById("label-container");
+            nameTag = document.getElementById("name-tag");
+            for (let i = 0; i < maxPredictions; i++) { // and class labels
+                labelContainer.appendChild(document.createElement("div"));
+            }
+        }
+    
+        async function loop() {
+            webcam.update(); // update the webcam frame
+            await predict();
+            window.requestAnimationFrame(loop);
+        }
+    
+        // run the webcam image through the image model
+        async function predict() {
+            // predict can take in an image, video or canvas html element
+            let currentName = '';
+            const prediction = await model.predict(webcam.canvas);
+            for (let i = 0; i < maxPredictions; i++) {
+                const classPrediction =
+                    prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+                    labelContainer.childNodes[i].innerHTML = classPrediction;
+                
+                    if( prediction[i].probability.toFixed(2) > 0.8){
+                        //console.log(prediction[i].className);
+                        currentName = prediction[i].className;
+                    }
+            }
+            console.log(currentName);
+            nameTag.innerHTML = currentName;
+            
+        }
+    </script>
+</body>
+
+</html>
+
+
+

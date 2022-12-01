@@ -1,0 +1,13 @@
+
+<svg width="810px" height="811px" viewBox="0 0 810 811" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Full-HD-Copy-8" transform="translate(-555.000000, -134.000000)">
+            <g id="Group-6" transform="translate(555.000000, 134.000000)">
+                <path d="M810,1 C810,224.672594 628.673085,406 405,406 L405,1 L810,1 Z" id="Path" fill="#001E48"></path>
+                <path d="M338,810 C151.329955,810 0,658.669142 0,472 L338,472 L338,810 Z" id="Path" fill="#73B4FF"></path>
+                <path d="M405,405 C628.673085,405 810,586.776406 810,811 L405,811 L405,405 Z" id="Path" fill="#FF5444"></path>
+                <circle id="Oval" fill="#FFCB00" fill-rule="nonzero" cx="173" cy="169" r="169"></circle>
+            </g>
+        </g>
+    </g>
+</svg>
